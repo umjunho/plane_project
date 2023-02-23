@@ -1,0 +1,1 @@
+print("fork 시험")
