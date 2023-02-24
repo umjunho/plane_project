@@ -10,24 +10,24 @@ conn = sqlite3.connect(path + '\\table.db')
 cur = conn.cursor()
 
 def make_table():
-    #user table
+    #user table / primary key는 user_id
     cur.execute('''
     create table if not exists user(
-        user_id text not null,
-        user_pw text not null,
-        user_name text not null, 
+        user_id TEXT not null,
+        user_pw TEXT not null,
+        user_name TEXT not null, 
         user_tel integer not null, 
         user_jumin integer not null,
-        user_email text,
+        user_email TEXT,
         user_grade integer, 
         primary key(user_id)
         )
     ''')
 
-    #airplane table
+    #airplane table / primary key는 air_name
     cur.execute('''
     create table if not exists airplane(
-        air_name text not null,
+        air_name TEXT not null,
         capacity integer,
         primary key(air_name)
         )
@@ -36,43 +36,49 @@ def make_table():
     #seat table
     cur.execute('''
     create table if not exists seat(
-        seat_code text not null,
+        seat_code TEXT not null,
         seat_price integer,
-        air_name text not null,
-        foreign key(air_name) references airplane(air_name)
+        air_name TEXT not null
         )
     ''')
 
-    #timetable table
+    #timetable table / primary key는 time_num / foreign key는 air_name
     cur.execute('''
     create table if not exists timetable(
         time_num integer not null,
-        loc_start text,
-        loc_des text,
-        time_start text,
-        time_des text,
-        air_name text not null,
+        loc_start TEXT,
+        loc_des TEXT,
+        time_start TEXT,
+        time_des TEXT,
+        air_name TEXT not null,
         primary key(time_num),
         foreign key(air_name) references airplane(air_name)
         )
     ''')
 
-    #reservation table
+    #reservation table / primary key(res_num), foreign key는 user_id, time_num, air_name
     cur.execute('''
     create table if not exists reservation(
-        res_num text not null,
-        user_id text not null, 
-        seat_code integer not null,
+        res_num TEXT not null,
+        user_id TEXT not null, 
+        seat_code TEXT not null,
         time_num integer not null,
-        air_name text not null,
+        air_name TEXT not null,
         primary key(res_num),
         foreign key(user_id) references user(user_id)
-        foreign key(seat_code) references seat(seat_code)
         foreign key(time_num) references timetable(time_num)
         foreign key(air_name) references airplane(air_name)
         )
     ''')
 
+    #manager table/ primary key는 manager_id
+    cur.execute('''
+    create table if not exists manager(
+        manager_id TEXT not null,
+        manager_pw TEXT not null,
+        primary key(manager_id)
+        )
+    ''')
 
 def insert_data():
 
